@@ -9,29 +9,18 @@ function App() {
   const [color, setColor] = useState(0);
   const [note, setNote] = useState("");
   const [show, setShow] = useState(false)
-  var tmp = "";
+  const [tmp, setTmp] = useState("")
 
   useEffect(()=>{
     console.log("Color changed!");
   }, [color])
 
   useEffect(()=>{
-
-    console.log("nOTE MDIFIED!");
+    console.log("Note Modified!");
   }, [note,show])  
 
   function changeColor (){
     setColor((color+1) % 4)
-  }
-
-  function renderItem(){
-    // console.log(show)
-    // if(show == "1"){
-    //   setShow("0");
-    //   return (<NoteComponent note={note}/>)
-    // }
-    // return null
-
   }
 
   return (
@@ -42,12 +31,16 @@ function App() {
       </div>
 
       <div>
-        <input onChange={(e)=>{   
-          tmp = e.target.value;
+        <input onChange={(e)=>{
+          setTmp(e.target.value);
         }} type="text"/>
 
-        <button onClick={()=>{    
-          if(tmp!="" && note!=tmp){
+        <button onClick={()=>{
+          if(tmp=="" && tmp!=note){
+            alert("Note can't be set to empty!")
+          }else if(tmp==note){
+            alert("Already exists!")
+          }else{
             setNote(tmp);
             setShow(true);
           }
@@ -56,8 +49,8 @@ function App() {
       
       <br /><br />
       <button onClick={()=>{    
-          setNote("");
-          setShow(false);
+        setNote("");
+        setShow(false);
       }}>Remove Note</button>
 
       {show ? <NoteComponent note={note}/> : null}
