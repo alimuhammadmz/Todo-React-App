@@ -9,6 +9,7 @@ function App() {
   const [color, setColor] = useState(0);
   const [note, setNote] = useState("");
   const [show, setShow] = useState(false)
+  var tmp = "";
 
   useEffect(()=>{
     console.log("Color changed!");
@@ -35,21 +36,33 @@ function App() {
 
   return (
     <div style={{backgroundColor : colorScheme[color]}} className="w-100">
-      <HelloComponent msg="Default note" />
-      <button onClick={changeColor}>Change Note Color</button>
+      <div>
+        <HelloComponent msg="Default note" />
+        <button onClick={changeColor}>Change Note Color</button>
+      </div>
 
-      <input onChange={(e)=>{
-        setShow(false);
-        setNote(e.target.value);
-      }} type="text"/>
+      <div>
+        <input onChange={(e)=>{   
+          tmp = e.target.value;
+        }} type="text"/>
 
-      <button onClick={()=>{
-        setShow(!show);
-      }}>Save</button>
+        <button onClick={()=>{    
+          if(tmp!="" && note!=tmp){
+            setNote(tmp);
+            setShow(true);
+          }
+        }}>Save Note</button>
+      </div>
       
+      <br /><br />
+      <button onClick={()=>{    
+          setNote("");
+          setShow(false);
+      }}>Remove Note</button>
+
       {show ? <NoteComponent note={note}/> : null}
     </div>
-    
+
   )
 }
 
