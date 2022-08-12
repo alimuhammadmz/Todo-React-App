@@ -1,15 +1,17 @@
-import { useState  ,useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-
-import HelloComponent from './Components/helloComponent';
-import NoteComponent from './Components/noteComponent';
+import {useState, useEffect } from 'react'
+import HelloComponent from './Components/helloComponent'
+import NoteComponent from './Components/noteComponent'
 
 function App() {
-  const colorScheme = ["pink", "blue", "gray", "yellow"];
-  const [color, setColor] = useState(0);
-  const [note, setNote] = useState("");
+  const colorScheme = ["pink", "blue", "gray", "yellow"]
+  const [color, setColor] = useState(0)
+
+  const [note, setNote] = useState("")
   const [show, setShow] = useState(false)
-  const [tmp, setTmp] = useState("")
+  const [update, setUpdate] = useState(false)
+
+  const [listNotes, setListNotes] = useState([])
+  const [takeNotes, setTakeNotes] = useState("")
 
   useEffect(()=>{
     console.log("Color changed!");
@@ -17,10 +19,20 @@ function App() {
 
   useEffect(()=>{
     console.log("Note Modified!");
-  }, [note,show])  
+  }, [note, show, update, takeNotes])  
 
   function changeColor (){
     setColor((color+1) % 4)
+  }
+
+  function updateNote(){
+    console.log("fmdjf")
+    setUpdate(true)
+  }
+
+
+  function updateList(msg) {
+    setListNotes([...listNotes, msg]);
   }
 
   return (
@@ -31,17 +43,20 @@ function App() {
       </div>
 
       <div>
-        <input onChange={(e)=>{
-          setTmp(e.target.value);
+        <input value={takeNotes} onChange={(e)=>{
+          setTakeNotes(e.target.value);
         }} type="text"/>
 
         <button onClick={()=>{
-          if(tmp=="" && tmp!=note){
+          setUpdate(false);
+          if(takeNotes=="" && takeNotes!=note){
             alert("Note can't be set to empty!")
-          }else if(tmp==note){
+          }else if(takeNotes==note){
             alert("Already exists!")
           }else{
-            setNote(tmp);
+            setNote(takeNotes);
+            updateList(takeNotes)
+            setTakeNotes("");
             setShow(true);
           }
         }}>Save Note</button>
@@ -49,13 +64,19 @@ function App() {
       
       <br /><br />
       <button onClick={()=>{    
-        setNote("");
+        var tmpList = [...listNotes];
+        tmpList.pop();
+        setListNotes([...tmpList]);
         setShow(false);
-      }}>Remove Note</button>
+      }}>Remove Last Note</button>
 
-      {show ? <NoteComponent note={note}/> : null}
+      <div >
+        {<NoteComponent notes={listNotes}/>}
+      </div>
+
+      
+
     </div>
-
   )
 }
 
